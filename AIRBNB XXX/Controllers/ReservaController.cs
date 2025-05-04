@@ -30,6 +30,23 @@ namespace AIRBNB_XXX.Controllers
             }
         }
 
-       
+        [HttpDelete]
+        public IActionResult EliminarReserva(int IdReserva)
+        {
+            try
+            {
+                Resultado = reservaRepositorio.EliminarReserva(IdReserva);
+
+                if (Resultado)
+                    return Ok("RESERVADA ELIMINADA CON EXITO");
+                else
+                    return BadRequest("ERROR AL ELIMINAR LA RESERVA, INTENTELO DE NUEVO");
+            }
+            catch (Exception Ex)
+            {
+                return StatusCode(500, "Error inesperado: " + Ex.Message);
+            }
+        }
+
     }
 }
