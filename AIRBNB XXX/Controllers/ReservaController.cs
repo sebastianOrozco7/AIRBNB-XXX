@@ -31,11 +31,11 @@ namespace AIRBNB_XXX.Controllers
         }
 
         [HttpDelete]
-        public IActionResult EliminarReserva(int IdReserva)
+        public IActionResult EliminarReserva(int IdReserva,int IdHabitacion)
         {
             try
             {
-                Resultado = reservaRepositorio.EliminarReserva(IdReserva);
+                Resultado = reservaRepositorio.EliminarReserva(IdReserva,IdHabitacion);
 
                 if (Resultado)
                     return Ok("RESERVADA ELIMINADA CON EXITO");

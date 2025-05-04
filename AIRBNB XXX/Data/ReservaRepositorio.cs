@@ -28,7 +28,7 @@ namespace AIRBNB_XXX.Data
                     if (Verificacion)
                     {
                         FilasAfectadas = comando.ExecuteNonQuery();
-                        CambiarDisponibilidadTrue(reserva.IDHabitacion);
+                        CambiarDisponibilidad(reserva.IDHabitacion);
                         return FilasAfectadas > 0;
                     }
                     else
@@ -55,7 +55,7 @@ namespace AIRBNB_XXX.Data
             }
         }
 
-        public void CambiarDisponibilidadTrue(int IdHabitacion)
+        public void CambiarDisponibilidad(int IdHabitacion)
         {
             using(SqlConnection conexion = new ConexionDB().GetConexion)
             {
@@ -64,16 +64,26 @@ namespace AIRBNB_XXX.Data
 
                 using(SqlCommand comando = new(Query, conexion))
                 {
-                    comando.Parameters.AddWithValue("@disponibilidad", false);
-                    comando.Parameters.AddWithValue("@idhabitacion", IdHabitacion);
-                    comando.ExecuteNonQuery();
+                    bool Verificar = VerificarDisponibilidad(IdHabitacion);
+
+                    if (Verificar)
+                    {
+                        comando.Parameters.AddWithValue("@disponibilidad", false);
+                        comando.Parameters.AddWithValue("@idhabitacion", IdHabitacion);
+                    }
+                    else
+                    {
+                        comando.Parameters.AddWithValue("@disponibilidad", true);
+                        comando.Parameters.AddWithValue("@idhabitacion", IdHabitacion);
+                    }
+                        comando.ExecuteNonQuery();
                 }
             }
         }
 
 
 
-        public bool EliminarReserva(int IdReserva)
+        public bool EliminarReserva(int IdReserva,int IdHabitacion)
         {
             using(SqlConnection conexion = new ConexionDB().GetConexion)
             {
@@ -83,7 +93,7 @@ namespace AIRBNB_XXX.Data
                 using(SqlCommand comando = new(Query, conexion))
                 {
                     comando.Parameters.AddWithValue("@idreserva", IdReserva);
-
+                    CambiarDisponibilidad(IdHabitacion);
                     FilasAfectadas = comando.ExecuteNonQuery();
 
                     return FilasAfectadas > 0;
